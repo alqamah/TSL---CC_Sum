@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let uploadedFile = null;
     let summaryData = [];
     let ccMap = {};
+    let ccDivisionMap = {};
 
     const ccInfoRaw = `
 IRON MAKING:
@@ -194,11 +195,22 @@ OTHER:
     // Parse CC Info
     function parseCCInfo() {
         const lines = ccInfoRaw.split('\n');
+        let currentDivision = "Unknown";
+
         lines.forEach(line => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return;
+
+            // Check if it is a Division Header (ends with :)
+            if (trimmedLine.endsWith(':')) {
+                currentDivision = trimmedLine.replace(':', '').trim();
+                return;
+            }
+
             // Split by tab or multiple spaces
             // Look for the last number in the line which is likely the CC
             // Structure is usually: Name <whitespace> CC <whitespace>
-            const parts = line.trim().split(/\t+/);
+            const parts = trimmedLine.split(/\t+/);
             if (parts.length >= 2) {
                 // Try to identify the CC part. It's usually the second column or the last numeric column.
                 // In the provided file, it looks like: Name [tab] CC [tab] [empty]
@@ -207,6 +219,7 @@ OTHER:
                 if (/^\d+$/.test(potentialCC)) {
                     const name = parts[0].trim().replace(/^"|"$/g, '').trim(); // Remove surrounding quotes like "HML "
                     ccMap[potentialCC] = name;
+                    ccDivisionMap[potentialCC] = currentDivision;
                 }
             }
         });
@@ -376,6 +389,7 @@ OTHER:
         const result = Object.keys(totals)
             .map(key => ({
                 cc: key,
+                division: ccDivisionMap[key] || "Unknown",
                 name: ccMap[key] || "Unknown",
                 total: totals[key]
             }))
@@ -402,6 +416,7 @@ OTHER:
             grandTotal += item.total;
             tr.innerHTML = `
                 <td>${item.cc}</td>
+                <td>${item.division}</td>
                 <td>${item.name}</td>
                 <td>${item.total.toFixed(2)}</td>
             `;
@@ -410,7 +425,7 @@ OTHER:
 
         grandTotalDisplay.textContent = grandTotal.toFixed(2);
         // Update footer colspan
-        document.querySelector('.total-row td:first-child').setAttribute('colspan', '2');
+        document.querySelector('.total-row td:first-child').setAttribute('colspan', '3');
     }
 
     // Export Functionality
@@ -419,6 +434,7 @@ OTHER:
 
         const ws = XLSX.utils.json_to_sheet(summaryData.map(item => ({
             "Cost Center": item.cc,
+            "Division": item.division,
             "Description": item.name,
             "Total Amount": item.total
         })));
