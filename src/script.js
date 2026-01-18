@@ -13,247 +13,682 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let uploadedFile = null;
     let summaryData = [];
-    let ccMap = {};
-    let ccDivisionMap = {};
 
-    const ccInfoRaw = `
-IRON MAKING:
-    A-F BF	25225		
-	A-F BF, IEM-1	20300		
-	A-F BF, IEM-2	25242		
-	C-BF	25223		
-	E-BF	23222		
-	F-BF	25226		
-	G-BF	25320		
-	G-BF, IEM	20420		
-	G-BF, Belt Group	25230		
-	G-BF-SSP	40420		
-	H-BF (Mechanical)	25325		
-	H-BF (Operation)-1	25345		
-	H-BF (Operation)-2	20520		
-	I-BF	25981		
-	Coke Plant, Battery 5,6,7	25021		
-	Coke Plant, BAT 10/11	25032		
-	Coke Plant, CDQ 10/11	22203		
-	Coke Plant Bat 8,9	25022		
-	Coke Plant Old BPP	25023		
-	Coke Plant New BPP	25033		
-	Coke Plant- 1	20150		
-	Coke Plant- 2	20112		
-	Coke Plant- 3	20113		
-	Coke Plant- 4	20140		
-	Coke Plant- 5	25042		
-	Coke Plant- 6	25035		
-	Coke Plant- 7	25036		
-	Coke Plant, IEM	25043		
-	Sinter Plant-1 (Mech.)	25121		
-	Sinter Plant-1 (Operation-1)	20230		
-	Sinter Plant-1 (Operation-2)	23020		
-	Sinter Plant-1 (IEM)	25141		
-	Sinter Plant-2	25122		
-	Sinter Plant-2 (IEM)	25142		
-	Sinter Plant-3	25123		
-	Sinter Plant-3 (IEM-1)	25143		
-	Sinter Plant-3 (IEM-2)	23325		
-	Sinter Plant-4	25124		
-	Sinter Plant-4 (IEM-1)	20270		
-	Sinter Plant-4 (IEM-2)	25144		
-	RMBB-1 (Mech)	25120		
-	RMBB-1 (Operation)	20220		
-	RMBB#2-1	25125		
-	RMBB#2-2	25145		
-	RMBB#2-3	20250		
-	Pellet Plant (Mech)-1	25964		
-	Pellet Plant (Mech)-2	25965		
-	Pellet Plant Operation-1	20651		
-	Pellet Plant Operation-2	20661		
-	Pellet Plant-IEM	25974		
-	Pellet Plant-FME	25975		
-	FMM-IM	25222		
-STEEL MAKING:	
-    LD#1- 1	25421		
-	LD#1- 2	25420		
-	LD#1- 3	25422		
-	LD#1- 4	23221		
-	LD#1-Operation	21030		
-	LD#1-IEM	25441		
-	LD#1-FME	25443		
-	LD#2- 1	25521		
-	LD#2- 2	25522		
-	LD#2- 3	25221		
-	LD#2- 4	25952		
-	LD#2- 5	22020		
-	LD#2- 6	22022		
-	LD#2, IEM	25541		
-	LD#2, FME	25543		
-	LD#2, BIM	22021		
-	LD#3 (Mechanical) -1	25966		
-	LD#3 (Mechanical) -2	25967		
-	LD#3 (Operation)	22412		
-	RMM Mech-1	25231		
-	RMM Mech-2	20161		
-	RMM Mech-3	20660		
-	RMM OPN	20004		
-	RMM Coke	20061		
-	Lime Plant	25935		
-	Belt Group	25695		
-	SPP	25355		
-	SGDP	25335		
-MILLS:	
-    HSM	25620		
-	HSM, FME-1	23332		
-	HSM, FME-2	25641		
-	CRM-1	25728		
-	CRM-2	25721		
-	CRM-3	25720		
-	CRM-4	23223		
-	CRM-5	25746		
-	CRM ARP	22211		
-	CRM BAF	22230		
-	CRM F&D	22250		
-	TSCR	25969		
-	TSCR-FME	25050		
-	MM	25031		
-	MM, IEM	25051		
-	WRM	25820		
-	NBM-1	25920		
-	NBM-2	21330		
-POWER SYSTEM:	
-    PH#3	25431		
-	PH#3 -2	23031		
-	PH#4	25531		
-	PH#5 -1	25631		
-	PH#5 -2	25634		
-	BH#2	23065		
-	BH#3	25731		
-	BH#4	23069		
-	BPH-1	25732		
-	BPH-2	23054		
-	BPH-3	23079		
-	BPH-4	23114		
-OTHER:	
-    FMM	23220		
-	Belt Group-1	23224		
-	Belt Group-2	20130		
-	GORC	29450		
-	SMD	23433		
-	RMM Logistics	20006		
-	Central Hub	26302		
-	Fire Brigade	29443		
-	Water Manag	23130		
-	CRM BARA	22306		
-	IBMD-1	41120		
-	IBMD-2	41130		
-	IBMD-3	41140		
-	FME-1	23321		
-	FME-2	23322		
-	FME-3	25140		
-	FME-4	25251		
-	FME-5	20316		
-	FMD MECHANICAL	25934		
-	FMD-1	23017		
-	FMD-2	25018		
-	FMD-3	23016		
-	FMD GCP-1	23015		
-	FMD GCP-2	25931		
-	FMD GAS LINE	23018		
-	FMD GMS	25932		
-	FMD GHB	23012		
-	40 MW-1	25635		
-	40 MW-2	25655		
-	E&P	29162		
-	E&P-HSM	29200		
-	T-30	23086		
-	"HML	"	25131		
-	MPDS	23084		
-	MRP, IEM	25351		
-	R&D-1	29010		
-	R&D-2	29016		
-	TWSGS	29011		
-	Engg. Services (LP)	21120		
-	Engg. Services (AC)	23615		
-	Engg. Services (AC-CRM)	22207		
-	Engg. Services (PP)	20260		
-	Engg. Services (BIM-1)	22220		
-	Engg. Services (BIM-2)	23711		
-	Engg. Services (BIM-3)	22142		
-	Engg. Services (BIM-4)	20240		
-	Engg. Services (BIM-5)	22130		
-	Engg. Services (BIM-6)	23151		
-	Engg. Services (BIM SMD-1)	23420		
-	Engg. Services (BIM SMD-2)	25990		
-	Engg. Services (BIM LD#1)	21021		
-	Engg. Services (BIM I-BF)	20710		
-	Segment Shop	23431		
-	EQMS, SME	21003		
-	EQMS-1	23716		
-	EQMS-2	23712		
-	EQMS-3	23718		
-	Delivery Management	26202		
-`;
-
-    // Parse CC Info
-    function parseCCInfo() {
-        const lines = ccInfoRaw.split('\n');
-        let currentDivision = "Unknown";
-
-        lines.forEach(line => {
-            const trimmedLine = line.trim();
-            if (!trimmedLine) return;
-
-            // Check if it is a Division Header (ends with :)
-            if (trimmedLine.endsWith(':')) {
-                currentDivision = trimmedLine.replace(':', '').trim();
-                return;
-            }
-
-            // Split by tab or multiple spaces
-            // Look for the last number in the line which is likely the CC
-            // Structure is usually: Name <whitespace> CC <whitespace>
-            const parts = trimmedLine.split(/\t+/);
-            if (parts.length >= 2) {
-                // Try to identify the CC part. It's usually the second column or the last numeric column.
-                // In the provided file, it looks like: Name [tab] CC [tab] [empty]
-                // So parts[1] is likely the CC.
-                const potentialCC = parts[1].trim();
-                if (/^\d+$/.test(potentialCC)) {
-                    const name = parts[0].trim().replace(/^"|"$/g, '').trim(); // Remove surrounding quotes like "HML "
-                    ccMap[potentialCC] = name;
-                    ccDivisionMap[potentialCC] = currentDivision;
-                }
-            }
-        });
-        console.log("Loaded CC Map:", Object.keys(ccMap).length, "entries");
-    }
-
-    // Initialize CC Map
-    parseCCInfo();
+    const CC_DATA = {
+        "25225": {
+            "name": "A-F BF",
+            "division": "IRON MAKING"
+        },
+        "20300": {
+            "name": "A-F BF, IEM-1",
+            "division": "IRON MAKING"
+        },
+        "25242": {
+            "name": "A-F BF, IEM-2",
+            "division": "IRON MAKING"
+        },
+        "25223": {
+            "name": "C-BF",
+            "division": "IRON MAKING"
+        },
+        "23222": {
+            "name": "E-BF",
+            "division": "IRON MAKING"
+        },
+        "25226": {
+            "name": "F-BF",
+            "division": "IRON MAKING"
+        },
+        "25320": {
+            "name": "G-BF",
+            "division": "IRON MAKING"
+        },
+        "20420": {
+            "name": "G-BF, IEM",
+            "division": "IRON MAKING"
+        },
+        "25230": {
+            "name": "G-BF, Belt Group",
+            "division": "IRON MAKING"
+        },
+        "40420": {
+            "name": "G-BF-SSP",
+            "division": "IRON MAKING"
+        },
+        "25325": {
+            "name": "H-BF (Mechanical)",
+            "division": "IRON MAKING"
+        },
+        "25345": {
+            "name": "H-BF (Operation)-1",
+            "division": "IRON MAKING"
+        },
+        "20520": {
+            "name": "H-BF (Operation)-2",
+            "division": "IRON MAKING"
+        },
+        "25981": {
+            "name": "I-BF",
+            "division": "IRON MAKING"
+        },
+        "25021": {
+            "name": "Coke Plant, Battery 5,6,7",
+            "division": "IRON MAKING"
+        },
+        "25032": {
+            "name": "Coke Plant, BAT 10/11",
+            "division": "IRON MAKING"
+        },
+        "22203": {
+            "name": "Coke Plant, CDQ 10/11",
+            "division": "IRON MAKING"
+        },
+        "25022": {
+            "name": "Coke Plant Bat 8,9",
+            "division": "IRON MAKING"
+        },
+        "25023": {
+            "name": "Coke Plant Old BPP",
+            "division": "IRON MAKING"
+        },
+        "25033": {
+            "name": "Coke Plant New BPP",
+            "division": "IRON MAKING"
+        },
+        "20150": {
+            "name": "Coke Plant- 1",
+            "division": "IRON MAKING"
+        },
+        "20112": {
+            "name": "Coke Plant- 2",
+            "division": "IRON MAKING"
+        },
+        "20113": {
+            "name": "Coke Plant- 3",
+            "division": "IRON MAKING"
+        },
+        "20140": {
+            "name": "Coke Plant- 4",
+            "division": "IRON MAKING"
+        },
+        "25042": {
+            "name": "Coke Plant- 5",
+            "division": "IRON MAKING"
+        },
+        "25035": {
+            "name": "Coke Plant- 6",
+            "division": "IRON MAKING"
+        },
+        "25036": {
+            "name": "Coke Plant- 7",
+            "division": "IRON MAKING"
+        },
+        "25043": {
+            "name": "Coke Plant, IEM",
+            "division": "IRON MAKING"
+        },
+        "25121": {
+            "name": "Sinter Plant-1 (Mech.)",
+            "division": "IRON MAKING"
+        },
+        "20230": {
+            "name": "Sinter Plant-1 (Operation-1)",
+            "division": "IRON MAKING"
+        },
+        "23020": {
+            "name": "Sinter Plant-1 (Operation-2)",
+            "division": "IRON MAKING"
+        },
+        "25141": {
+            "name": "Sinter Plant-1 (IEM)",
+            "division": "IRON MAKING"
+        },
+        "25122": {
+            "name": "Sinter Plant-2",
+            "division": "IRON MAKING"
+        },
+        "25142": {
+            "name": "Sinter Plant-2 (IEM)",
+            "division": "IRON MAKING"
+        },
+        "25123": {
+            "name": "Sinter Plant-3",
+            "division": "IRON MAKING"
+        },
+        "25143": {
+            "name": "Sinter Plant-3 (IEM-1)",
+            "division": "IRON MAKING"
+        },
+        "23325": {
+            "name": "Sinter Plant-3 (IEM-2)",
+            "division": "IRON MAKING"
+        },
+        "25124": {
+            "name": "Sinter Plant-4",
+            "division": "IRON MAKING"
+        },
+        "20270": {
+            "name": "Sinter Plant-4 (IEM-1)",
+            "division": "IRON MAKING"
+        },
+        "25144": {
+            "name": "Sinter Plant-4 (IEM-2)",
+            "division": "IRON MAKING"
+        },
+        "25120": {
+            "name": "RMBB-1 (Mech)",
+            "division": "IRON MAKING"
+        },
+        "20220": {
+            "name": "RMBB-1 (Operation)",
+            "division": "IRON MAKING"
+        },
+        "25125": {
+            "name": "RMBB#2-1",
+            "division": "IRON MAKING"
+        },
+        "25145": {
+            "name": "RMBB#2-2",
+            "division": "IRON MAKING"
+        },
+        "20250": {
+            "name": "RMBB#2-3",
+            "division": "IRON MAKING"
+        },
+        "25964": {
+            "name": "Pellet Plant (Mech)-1",
+            "division": "IRON MAKING"
+        },
+        "25965": {
+            "name": "Pellet Plant (Mech)-2",
+            "division": "IRON MAKING"
+        },
+        "20651": {
+            "name": "Pellet Plant Operation-1",
+            "division": "IRON MAKING"
+        },
+        "20661": {
+            "name": "Pellet Plant Operation-2",
+            "division": "IRON MAKING"
+        },
+        "25974": {
+            "name": "Pellet Plant-IEM",
+            "division": "IRON MAKING"
+        },
+        "25975": {
+            "name": "Pellet Plant-FME",
+            "division": "IRON MAKING"
+        },
+        "25222": {
+            "name": "FMM-IM",
+            "division": "IRON MAKING"
+        },
+        "25421": {
+            "name": "LD#1- 1",
+            "division": "STEEL MAKING"
+        },
+        "25420": {
+            "name": "LD#1- 2",
+            "division": "STEEL MAKING"
+        },
+        "25422": {
+            "name": "LD#1- 3",
+            "division": "STEEL MAKING"
+        },
+        "23221": {
+            "name": "LD#1- 4",
+            "division": "STEEL MAKING"
+        },
+        "21030": {
+            "name": "LD#1-Operation",
+            "division": "STEEL MAKING"
+        },
+        "25441": {
+            "name": "LD#1-IEM",
+            "division": "STEEL MAKING"
+        },
+        "25443": {
+            "name": "LD#1-FME",
+            "division": "STEEL MAKING"
+        },
+        "25521": {
+            "name": "LD#2- 1",
+            "division": "STEEL MAKING"
+        },
+        "25522": {
+            "name": "LD#2- 2",
+            "division": "STEEL MAKING"
+        },
+        "25221": {
+            "name": "LD#2- 3",
+            "division": "STEEL MAKING"
+        },
+        "25952": {
+            "name": "LD#2- 4",
+            "division": "STEEL MAKING"
+        },
+        "22020": {
+            "name": "LD#2- 5",
+            "division": "STEEL MAKING"
+        },
+        "22022": {
+            "name": "LD#2- 6",
+            "division": "STEEL MAKING"
+        },
+        "25541": {
+            "name": "LD#2, IEM",
+            "division": "STEEL MAKING"
+        },
+        "25543": {
+            "name": "LD#2, FME",
+            "division": "STEEL MAKING"
+        },
+        "22021": {
+            "name": "LD#2, BIM",
+            "division": "STEEL MAKING"
+        },
+        "25966": {
+            "name": "LD#3 (Mechanical) -1",
+            "division": "STEEL MAKING"
+        },
+        "25967": {
+            "name": "LD#3 (Mechanical) -2",
+            "division": "STEEL MAKING"
+        },
+        "22412": {
+            "name": "LD#3 (Operation)",
+            "division": "STEEL MAKING"
+        },
+        "25231": {
+            "name": "RMM Mech-1",
+            "division": "STEEL MAKING"
+        },
+        "20161": {
+            "name": "RMM Mech-2",
+            "division": "STEEL MAKING"
+        },
+        "20660": {
+            "name": "RMM Mech-3",
+            "division": "STEEL MAKING"
+        },
+        "20004": {
+            "name": "RMM OPN",
+            "division": "STEEL MAKING"
+        },
+        "20061": {
+            "name": "RMM Coke",
+            "division": "STEEL MAKING"
+        },
+        "25935": {
+            "name": "Lime Plant",
+            "division": "STEEL MAKING"
+        },
+        "25695": {
+            "name": "Belt Group",
+            "division": "STEEL MAKING"
+        },
+        "25355": {
+            "name": "SPP",
+            "division": "STEEL MAKING"
+        },
+        "25335": {
+            "name": "SGDP",
+            "division": "STEEL MAKING"
+        },
+        "25620": {
+            "name": "HSM",
+            "division": "MILLS"
+        },
+        "23332": {
+            "name": "HSM, FME-1",
+            "division": "MILLS"
+        },
+        "25641": {
+            "name": "HSM, FME-2",
+            "division": "MILLS"
+        },
+        "25728": {
+            "name": "CRM-1",
+            "division": "MILLS"
+        },
+        "25721": {
+            "name": "CRM-2",
+            "division": "MILLS"
+        },
+        "25720": {
+            "name": "CRM-3",
+            "division": "MILLS"
+        },
+        "23223": {
+            "name": "CRM-4",
+            "division": "MILLS"
+        },
+        "25746": {
+            "name": "CRM-5",
+            "division": "MILLS"
+        },
+        "22211": {
+            "name": "CRM ARP",
+            "division": "MILLS"
+        },
+        "22230": {
+            "name": "CRM BAF",
+            "division": "MILLS"
+        },
+        "22250": {
+            "name": "CRM F&D",
+            "division": "MILLS"
+        },
+        "25969": {
+            "name": "TSCR",
+            "division": "MILLS"
+        },
+        "25050": {
+            "name": "TSCR-FME",
+            "division": "MILLS"
+        },
+        "25031": {
+            "name": "MM",
+            "division": "MILLS"
+        },
+        "25051": {
+            "name": "MM, IEM",
+            "division": "MILLS"
+        },
+        "25820": {
+            "name": "WRM",
+            "division": "MILLS"
+        },
+        "25920": {
+            "name": "NBM-1",
+            "division": "MILLS"
+        },
+        "21330": {
+            "name": "NBM-2",
+            "division": "MILLS"
+        },
+        "25431": {
+            "name": "PH#3",
+            "division": "POWER SYSTEM"
+        },
+        "23031": {
+            "name": "PH#3 -2",
+            "division": "POWER SYSTEM"
+        },
+        "25531": {
+            "name": "PH#4",
+            "division": "POWER SYSTEM"
+        },
+        "25631": {
+            "name": "PH#5 -1",
+            "division": "POWER SYSTEM"
+        },
+        "25634": {
+            "name": "PH#5 -2",
+            "division": "POWER SYSTEM"
+        },
+        "23065": {
+            "name": "BH#2",
+            "division": "POWER SYSTEM"
+        },
+        "25731": {
+            "name": "BH#3",
+            "division": "POWER SYSTEM"
+        },
+        "23069": {
+            "name": "BH#4",
+            "division": "POWER SYSTEM"
+        },
+        "25732": {
+            "name": "BPH-1",
+            "division": "POWER SYSTEM"
+        },
+        "23054": {
+            "name": "BPH-2",
+            "division": "POWER SYSTEM"
+        },
+        "23079": {
+            "name": "BPH-3",
+            "division": "POWER SYSTEM"
+        },
+        "23114": {
+            "name": "BPH-4",
+            "division": "POWER SYSTEM"
+        },
+        "23220": {
+            "name": "FMM",
+            "division": "OTHER"
+        },
+        "23224": {
+            "name": "Belt Group-1",
+            "division": "OTHER"
+        },
+        "20130": {
+            "name": "Belt Group-2",
+            "division": "OTHER"
+        },
+        "29450": {
+            "name": "GORC",
+            "division": "OTHER"
+        },
+        "23433": {
+            "name": "SMD",
+            "division": "OTHER"
+        },
+        "20006": {
+            "name": "RMM Logistics",
+            "division": "OTHER"
+        },
+        "26302": {
+            "name": "Central Hub",
+            "division": "OTHER"
+        },
+        "29443": {
+            "name": "Fire Brigade",
+            "division": "OTHER"
+        },
+        "23130": {
+            "name": "Water Manag",
+            "division": "OTHER"
+        },
+        "22306": {
+            "name": "CRM BARA",
+            "division": "OTHER"
+        },
+        "41120": {
+            "name": "IBMD-1",
+            "division": "OTHER"
+        },
+        "41130": {
+            "name": "IBMD-2",
+            "division": "OTHER"
+        },
+        "41140": {
+            "name": "IBMD-3",
+            "division": "OTHER"
+        },
+        "23321": {
+            "name": "FME-1",
+            "division": "OTHER"
+        },
+        "23322": {
+            "name": "FME-2",
+            "division": "OTHER"
+        },
+        "25140": {
+            "name": "FME-3",
+            "division": "OTHER"
+        },
+        "25251": {
+            "name": "FME-4",
+            "division": "OTHER"
+        },
+        "20316": {
+            "name": "FME-5",
+            "division": "OTHER"
+        },
+        "25934": {
+            "name": "FMD MECHANICAL",
+            "division": "OTHER"
+        },
+        "23017": {
+            "name": "FMD-1",
+            "division": "OTHER"
+        },
+        "25018": {
+            "name": "FMD-2",
+            "division": "OTHER"
+        },
+        "23016": {
+            "name": "FMD-3",
+            "division": "OTHER"
+        },
+        "23015": {
+            "name": "FMD GCP-1",
+            "division": "OTHER"
+        },
+        "25931": {
+            "name": "FMD GCP-2",
+            "division": "OTHER"
+        },
+        "23018": {
+            "name": "FMD GAS LINE",
+            "division": "OTHER"
+        },
+        "25932": {
+            "name": "FMD GMS",
+            "division": "OTHER"
+        },
+        "23012": {
+            "name": "FMD GHB",
+            "division": "OTHER"
+        },
+        "25635": {
+            "name": "40 MW-1",
+            "division": "OTHER"
+        },
+        "25655": {
+            "name": "40 MW-2",
+            "division": "OTHER"
+        },
+        "29162": {
+            "name": "E&P",
+            "division": "OTHER"
+        },
+        "29200": {
+            "name": "E&P-HSM",
+            "division": "OTHER"
+        },
+        "23086": {
+            "name": "T-30",
+            "division": "OTHER"
+        },
+        "23084": {
+            "name": "MPDS",
+            "division": "OTHER"
+        },
+        "25351": {
+            "name": "MRP, IEM",
+            "division": "OTHER"
+        },
+        "29010": {
+            "name": "R&D-1",
+            "division": "OTHER"
+        },
+        "29016": {
+            "name": "R&D-2",
+            "division": "OTHER"
+        },
+        "29011": {
+            "name": "TWSGS",
+            "division": "OTHER"
+        },
+        "21120": {
+            "name": "Engg. Services (LP)",
+            "division": "OTHER"
+        },
+        "23615": {
+            "name": "Engg. Services (AC)",
+            "division": "OTHER"
+        },
+        "22207": {
+            "name": "Engg. Services (AC-CRM)",
+            "division": "OTHER"
+        },
+        "20260": {
+            "name": "Engg. Services (PP)",
+            "division": "OTHER"
+        },
+        "22220": {
+            "name": "Engg. Services (BIM-1)",
+            "division": "OTHER"
+        },
+        "23711": {
+            "name": "Engg. Services (BIM-2)",
+            "division": "OTHER"
+        },
+        "22142": {
+            "name": "Engg. Services (BIM-3)",
+            "division": "OTHER"
+        },
+        "20240": {
+            "name": "Engg. Services (BIM-4)",
+            "division": "OTHER"
+        },
+        "22130": {
+            "name": "Engg. Services (BIM-5)",
+            "division": "OTHER"
+        },
+        "23151": {
+            "name": "Engg. Services (BIM-6)",
+            "division": "OTHER"
+        },
+        "23420": {
+            "name": "Engg. Services (BIM SMD-1)",
+            "division": "OTHER"
+        },
+        "25990": {
+            "name": "Engg. Services (BIM SMD-2)",
+            "division": "OTHER"
+        },
+        "21021": {
+            "name": "Engg. Services (BIM LD#1)",
+            "division": "OTHER"
+        },
+        "20710": {
+            "name": "Engg. Services (BIM I-BF)",
+            "division": "OTHER"
+        },
+        "23431": {
+            "name": "Segment Shop",
+            "division": "OTHER"
+        },
+        "21003": {
+            "name": "EQMS, SME",
+            "division": "OTHER"
+        },
+        "23716": {
+            "name": "EQMS-1",
+            "division": "OTHER"
+        },
+        "23712": {
+            "name": "EQMS-2",
+            "division": "OTHER"
+        },
+        "23718": {
+            "name": "EQMS-3",
+            "division": "OTHER"
+        },
+        "26202": {
+            "name": "Delivery Management",
+            "division": "OTHER"
+        }
+    };
 
     // File Upload Handler
     fileUploadComp.addEventListener('change', (e) => {
         const file = e.target.files[0];
         handleFileSelect(file);
-    });
-
-    // Drag and Drop
-    const uploadArea = document.querySelector('.upload-area');
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = 'var(--primary-color)';
-        uploadArea.style.backgroundColor = '#eff6ff';
-    });
-    uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = 'var(--border-color)';
-        uploadArea.style.backgroundColor = '#f8fafc';
-    });
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = 'var(--border-color)';
-        uploadArea.style.backgroundColor = '#f8fafc';
-        if (e.dataTransfer.files.length) {
-            handleFileSelect(e.dataTransfer.files[0]);
-        }
     });
 
     function handleFileSelect(file) {
@@ -382,17 +817,20 @@ OTHER:
         });
 
         if (!foundAnyHeader) {
-            throw new Error("Could not find a header row containing both 'CC' and 'TOTAL'. Please check your file format.");
+            throw new Error("FILE FORMAT ERROR: Could not find a header row containing both 'CC' and 'TOTAL', call +91-8050509173 for help.");
         }
 
         // Convert back to array
         const result = Object.keys(totals)
-            .map(key => ({
-                cc: key,
-                division: ccDivisionMap[key] || "Unknown",
-                name: ccMap[key] || "Unknown",
-                total: totals[key]
-            }))
+            .map(key => {
+                const info = CC_DATA[key] || {};
+                return {
+                    cc: key,
+                    division: info.division || "Unknown",
+                    name: info.name || "Unknown",
+                    total: totals[key]
+                };
+            })
             .filter(item => item.total !== 0 && item.total !== null); // Filter 0 or null
 
         // Sort by CC (numeric if possible)
