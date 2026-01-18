@@ -248,7 +248,7 @@ OTHER:
         uploadedFile = file;
         fileNameDisplay.textContent = file.name;
         fileInfoDiv.classList.remove('hidden');
-        document.querySelector('.upload-text').textContent = "File selected provided below";
+        document.querySelector('.upload-text').textContent = "File uploaded";
         generateBtn.disabled = false;
         errorContainer.classList.add('hidden');
         outputSection.classList.add('hidden');
