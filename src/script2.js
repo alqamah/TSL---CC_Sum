@@ -741,8 +741,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper to find column indices based on header names (case-insensitive, partial match)
     function findHeaderIndices(headers) {
         // Common header names for Cost Center and Amount in finance reports (adapt as needed)
-        const ccHeaderOptions = ['cost center', 'cc code', 'co_area']; 
-        const amountHeaderOptions = ['amount', 'total amount', 'value', 'amount in co. code currency'];
+        const ccHeaderOptions = ['cost center', 'cc', 'CC']; 
+        const amountHeaderOptions = ['amount', 'total amount', 'TOTAL'];
 
         let ccIndex = -1;
         let amountIndex = -1;
@@ -758,8 +758,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ccIndex !== -1 && amountIndex !== -1) break;
         }
 
-        if (ccIndex === -1 || amountIndex === -1) {
-             throw new Error("Could not find required columns: 'Cost Center' and 'Amount'. Please ensure your Excel file contains these headers.");
+        if (ccIndex === -1) {
+             throw new Error("Could not find required columns: 'Cost Center'");
+        }
+        if (amountIndex === -1) {
+             throw new Error("Could not find required columns: 'Amount'. Please ensure your Excel file contains these headers.");
         }
 
         return { ccIndex, amountIndex };
