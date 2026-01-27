@@ -1,0 +1,72 @@
+[
+  {
+    "sl_no": 1,
+    "crane_name": "400 T",
+    "hourly_charges": 61538.46,
+    "ot_amount_per_hr": 5128.21,
+    "penalty_per_hr": 1282
+  },
+  {
+    "sl_no": 2,
+    "crane_name": "300 T",
+    "hourly_charges": 4246.80,
+    "ot_amount_per_hr": 3000,
+    "penalty_per_hr": 1061.7
+  },
+  {
+    "sl_no": 3,
+    "crane_name": "100 T",
+    "hourly_charges": 1602.56,
+    "ot_amount_per_hr": 993,
+    "penalty_per_hr": 400.64
+  },
+  {
+    "sl_no": 4,
+    "crane_name": "160 T",
+    "hourly_charges": 2564.10,
+    "ot_amount_per_hr": 1500,
+    "penalty_per_hr": 641
+  },
+  {
+    "sl_no": 5,
+    "crane_name": "80 T",
+    "hourly_charges": 1362.18,
+    "ot_amount_per_hr": 813,
+    "penalty_per_hr": 340.54
+  },
+  {
+    "sl_no": 6,
+    "crane_name": "55 T",
+    "hourly_charges": 1442.31,
+    "ot_amount_per_hr": 1442,
+    "penalty_per_hr": 360.58
+  },
+  {
+    "sl_no": 7,
+    "crane_name": "40 T",
+    "hourly_charges": 1400.00,
+    "ot_amount_per_hr": 780,
+    "penalty_per_hr": 350
+  },
+  {
+    "sl_no": 8,
+    "crane_name": "F-15",
+    "hourly_charges": 362.50,
+    "ot_amount_per_hr": 340,
+    "penalty_per_hr": 90.63
+  },
+  {
+    "sl_no": 9,
+    "crane_name": "TRX-23",
+    "hourly_charges": 487.50,
+    "ot_amount_per_hr": 390,
+    "penalty_per_hr": 121.88
+  },
+  {
+    "sl_no": 10,
+    "crane_name": "F20",
+    "hourly_charges": 762.50,
+    "ot_amount_per_hr": 460,
+    "penalty_per_hr": 190.63
+  }
+]
