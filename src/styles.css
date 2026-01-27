@@ -121,6 +121,20 @@ h4 {
     margin-bottom: 40px;
 }
 
+.upload-grid a {
+    color: var(--text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.75;
+    font-weight: 200;
+    transition: all 0.5s ease;
+}
+
+.upload-grid a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 /* Glass Card */
 .glass-card {
     background: var(--bg-card);
@@ -385,11 +399,10 @@ h4 {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 40px;
+    padding: 10px;
     color: var(--text-secondary);
     font-size: 0.85rem;
     border-top: 1px solid var(--border-subtle);
-    margin-top: 80px;
 }
 
 .footer p {

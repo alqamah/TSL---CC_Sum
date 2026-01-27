@@ -4,11 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
     const outputSection = document.getElementById('outputSection');
     const summaryTableBody = document.querySelector('#summaryTable tbody');
-    const totalShiftDisplay = document.getElementById('totalShift');
     const totalShiftChargesDisplay = document.getElementById('totalShiftCharges');
-    const totalOtDisplay = document.getElementById('totalOt');
     const totalOtChargesDisplay = document.getElementById('totalOtCharges');
-    const totalBdDisplay = document.getElementById('totalBd');
     const totalBdChargesDisplay = document.getElementById('totalBdCharges');
     const grandTotalDisplay = document.getElementById('grandTotal');
     const errorContainer = document.getElementById('errorContainer');
@@ -165,16 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${item.cc}</td>
                 <td>${ccInfo.name}</td>
                 <td>${ccInfo.division}</td>
-                <td>${item.shiftQty.toFixed(2)}</td>
-                <td>${formatCurrency(rate.hourly_charges)}</td>
-                <td>${formatCurrency(shiftCharges)}</td>
-                <td>${item.otQty.toFixed(2)}</td>
-                <td>${formatCurrency(rate.ot_amount_per_hr)}</td>
-                <td>${formatCurrency(otCharges)}</td>
-                <td>${item.bdHour.toFixed(2)}</td>
-                <td>${formatCurrency(rate.penalty_per_hr)}</td>
-                <td>${formatCurrency(bdCharges)}</td>
-                <td>${formatCurrency(netTotal)}</td>
+                <td title="₹${rate.hourly_charges} x ${item.shiftQty.toFixed(2)}h">${formatCurrency(shiftCharges)}</td>
+                <td title="₹${rate.ot_amount_per_hr} x ${item.otQty.toFixed(2)}h">${formatCurrency(otCharges)}</td>
+                <td title="₹${rate.penalty_per_hr} x ${item.bdHour.toFixed(2)}h">${formatCurrency(bdCharges)}</td>
+                <td title="shift_charges + ot_charges - bd_charges">${formatCurrency(netTotal)}</td>
             `;
             summaryTableBody.appendChild(row);
 
@@ -187,11 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
             grandTotal += netTotal;
         });
 
-        totalShiftDisplay.textContent = grandShift.toFixed(2);
         totalShiftChargesDisplay.textContent = formatCurrency(grandShiftCharges);
-        totalOtDisplay.textContent = grandOt.toFixed(2);
         totalOtChargesDisplay.textContent = formatCurrency(grandOtCharges);
-        totalBdDisplay.textContent = grandBd.toFixed(2);
         totalBdChargesDisplay.textContent = formatCurrency(grandBdCharges);
         grandTotalDisplay.textContent = formatCurrency(grandTotal);
 

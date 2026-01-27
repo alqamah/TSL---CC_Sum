@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crane Billing Summary Tool</title>
+    <title>COST CENTER REPORT GENERATOR</title>
     <!-- SheetJS Library -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <!-- Google Fonts: Plus Jakarta Sans -->
@@ -19,7 +19,7 @@
     <div class="app-wrapper">
         <!-- Navigation -->
         <nav class="navbar">
-            <div class="logo">CRANE BILLING SUMMARY</div>
+            <div class="logo">COST CENTER REPORT GENERATOR</div>
             <div class="nav-links">
                 <div class="nav-item">TATA STEEL LTD</div>
             </div>
@@ -39,12 +39,16 @@
                                 <polyline points="14 2 14 8 20 8" />
                             </svg>
                         </div>
-                        <h3>Vendor Billing Workbook</h3>
+                        <h3>Billing Summary Sheet</h3>
                         <div class="card-info">
-                            <h4>Excel</h4>
+                            <h4></h4>
                         </div>
                     </div>
-                    <p>Upload the vendor's billing workbook with multiple machine sheets.</p>
+                    <p>Upload the Mobile Equipment Billing Summary Sheet, with different cranes in different sheets.<br>
+                        Please use the specified format only.</p>
+                    <p class="sample-format-link"> <a href="../data/MASTER/LOGSHEET FORMAT.xlsx" download>Click here to
+                            download the sample
+                            format </a></p>
 
                     <label for="fileUpload" class="custom-file-upload">
                         <span>Select File</span>
@@ -56,7 +60,7 @@
 
             <!-- Action Area -->
             <div class="action-area">
-                <button id="generateBtn" class="btn-primary btn-large" disabled>
+                <button id="generateBtn" class="btn-primary" disabled>
                     Generate Summary
                 </button>
             </div>
@@ -82,15 +86,9 @@
                                 <th>Machine</th>
                                 <th>CC</th>
                                 <th>CC Name</th>
-                                <th>Division</th>
-                                <th>Shift Qty</th>
-                                <th>Hourly Rate</th>
+                                <th>CC Division</th>
                                 <th>Shift Charges</th>
-                                <th>OT Qty</th>
-                                <th>OT Rate/hr</th>
                                 <th>OT Charges</th>
-                                <th>BD Hour</th>
-                                <th>Penalty/hr</th>
                                 <th>BD Charges</th>
                                 <th>Net Total (₹)</th>
                             </tr>
@@ -101,14 +99,8 @@
                         <tfoot>
                             <tr class="total-row">
                                 <td colspan="4">Grand Total</td>
-                                <td id="totalShift">0</td>
-                                <td></td>
                                 <td id="totalShiftCharges">0</td>
-                                <td id="totalOt">0</td>
-                                <td></td>
                                 <td id="totalOtCharges">0</td>
-                                <td id="totalBd">0</td>
-                                <td></td>
                                 <td id="totalBdCharges">0</td>
                                 <td id="grandTotal">0.00</td>
                             </tr>
@@ -126,7 +118,7 @@
             <div id="reportSection" class="output-section hidden">
                 <div class="table-header">
                     <h3>Cost Center Report</h3>
-                    <button id="exportReportBtn" class="btn-ghost">Export Report</button>
+                    <button id="generateReportBtn" class="btn-primary btn-ghost">Export Report</button>
                 </div>
                 <div class="table-container">
                     <table id="reportTable">
