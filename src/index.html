@@ -4,42 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crane Billing Summary</title>
+    <title>Crane Billing Summary Tool</title>
+    <!-- SheetJS Library -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles2.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- SheetJS for Excel parsing -->
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <h1>Crane Billing Summary</h1>
-            <p class="subtitle">Upload Excel sheets to calculate crane billing by Cost Center</p>
-        </header>
+    <div class="app-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="logo">CRANE BILLING SUMMARY</div>
+            <div class="nav-links">
+                <div class="nav-item">TATA STEEL LTD</div>
+            </div>
+        </nav>
 
-        <main class="app-content">
-            <div class="upload-section">
-                <label for="fileUpload" class="upload-area">
-                    <span class="upload-icon">📂</span>
-                    <span class="upload-text">Click to upload or drag and drop Excel file (.xlsx, .xls)</span>
-                    <input type="file" id="fileUpload" accept=".xlsx, .xls" hidden>
-                </label>
-                <div id="fileInfo" class="file-info hidden">
-                    <span id="fileName"></span>
-                    <button id="removeFile" class="icon-btn" title="Remove file">✕</button>
+        <!-- Tool Section -->
+        <div id="tool" class="tool-container">
+            <div class="upload-grid">
+                <!-- File Upload Card -->
+                <div class="glass-card upload-card">
+                    <div class="card-header">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                        </div>
+                        <h3>Vendor Billing Workbook</h3>
+                        <div class="card-info">
+                            <h4>Excel</h4>
+                        </div>
+                    </div>
+                    <p>Upload the vendor's billing workbook with multiple machine sheets.</p>
+
+                    <label for="fileUpload" class="custom-file-upload">
+                        <span>Select File</span>
+                        <input type="file" id="fileUpload" accept=".xlsx,.xls">
+                    </label>
+                    <div id="statusText" class="status-text"></div>
                 </div>
             </div>
 
-            <div class="actions-section">
-                <button id="generateBtn" class="primary-btn" disabled>Generate Summary</button>
+            <!-- Action Area -->
+            <div class="action-area">
+                <button id="generateBtn" class="btn-primary btn-large" disabled>
+                    Generate Summary
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div class="results-container">
+            <!-- Error Container -->
+            <div id="errorContainer" class="error-container hidden">
+                <p id="errorMessage"></p>
             </div>
 
+            <!-- Summary Table Section -->
             <div id="outputSection" class="output-section hidden">
                 <div class="table-header">
                     <h3>Billing Summary (by Machine & Cost Center)</h3>
-                    <button id="exportBtn" class="secondary-btn">Export to Excel</button>
+                    <button id="exportBtn" class="btn-ghost">Export to Excel</button>
                 </div>
                 <div class="table-container">
                     <table id="summaryTable">
@@ -84,15 +118,15 @@
 
                 <!-- Generate Report Button -->
                 <div class="report-actions">
-                    <button id="generateReportBtn" class="primary-btn">Generate Report</button>
+                    <button id="generateReportBtn" class="btn-primary">Generate Report</button>
                 </div>
             </div>
 
             <!-- Report Section -->
-            <div id="reportSection" class="output-card hidden">
+            <div id="reportSection" class="output-section hidden">
                 <div class="table-header">
                     <h3>Cost Center Report</h3>
-                    <button id="exportReportBtn" class="secondary-btn">Export Report</button>
+                    <button id="exportReportBtn" class="btn-ghost">Export Report</button>
                 </div>
                 <div class="table-container">
                     <table id="reportTable">
@@ -116,12 +150,20 @@
                     </table>
                 </div>
             </div>
+        </div>
 
-            <div id="errorContainer" class="error-container hidden">
-                <p id="errorMessage"></p>
-            </div>
-        </main>
+        <!-- Footer -->
+        <footer class="footer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+            </svg>
+            <p>alqama.hasnain@tatasteel.com</p>
+            <p>FMM-INFRA</p>
+        </footer>
     </div>
+
     <script src="script2.js"></script>
 </body>
 

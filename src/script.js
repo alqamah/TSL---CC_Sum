@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const fileUploadComp = document.getElementById('fileUpload');
-    const fileNameDisplay = document.getElementById('fileName');
-    const fileInfoDiv = document.getElementById('fileInfo');
-    const removeFileBtn = document.getElementById('removeFile');
+    const statusText = document.getElementById('statusText');
     const generateBtn = document.getElementById('generateBtn');
     const outputSection = document.getElementById('outputSection');
     const summaryTableBody = document.querySelector('#summaryTable tbody');
@@ -229,23 +227,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFileSelect(file) {
         if (!file) return;
         uploadedFile = file;
-        fileNameDisplay.textContent = file.name;
-        fileInfoDiv.classList.remove('hidden');
-        document.querySelector('.upload-text').textContent = "File uploaded";
+        statusText.textContent = `Selected: ${file.name}`;
         generateBtn.disabled = false;
         errorContainer.classList.add('hidden');
         outputSection.classList.add('hidden');
+        reportSection.classList.add('hidden');
     }
 
-    removeFileBtn.addEventListener('click', () => {
+    function resetFileUpload() {
         uploadedFile = null;
         fileUploadComp.value = '';
-        fileInfoDiv.classList.add('hidden');
-        document.querySelector('.upload-text').textContent = "Click to upload or drag and drop Excel file (.xlsx, .xls)";
+        statusText.textContent = '';
         generateBtn.disabled = true;
         outputSection.classList.add('hidden');
+        reportSection.classList.add('hidden');
         errorContainer.classList.add('hidden');
-    });
+    }
 
     // ========================================
     // Generate Summary
