@@ -43,6 +43,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    rateBtn.addEventListener('click', () => {
+        renderRateCard();
+        const modal = document.getElementById('rateCardModal');
+        modal.classList.remove('hidden');
+    });
+
+    const closeModalBtn = document.querySelector('.close-modal');
+    const modal = document.getElementById('rateCardModal');
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    function renderRateCard() {
+        const tableBody = document.querySelector('#rateCardTable tbody');
+        tableBody.innerHTML = '';
+
+        RATE_CARD.forEach(rate => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${rate.crane_name}</td>
+                <td>${formatCurrency(rate.hourly_charges)}</td>
+                <td>${formatCurrency(rate.ot_amount_per_hr)}</td>
+                <td>${formatCurrency(rate.penalty_per_hr)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    ccBtn.addEventListener('click', () => {
+        window.open('cc_details.pdf', '_blank');
+    });
+
     function showError(msg) {
         errorMessage.textContent = msg;
         errorContainer.classList.remove('hidden');

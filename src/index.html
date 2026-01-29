@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modal_styles.css">
 </head>
 
 <body>
@@ -77,7 +78,8 @@
             <div id="outputSection" class="output-section hidden">
                 <div class="table-header">
                     <h3>Billing Summary (by Machine & Cost Center)</h3>
-                    <button id="exportBtn" class="btn-ghost">Export to Excel</button>
+                    <button style="margin-left: auto;" id="rateBtn" class="btn-ghost">Rate Sheet</button>
+                    <button style="margin-left: 10px;" id="exportBtn" class="btn-ghost">Export to Excel</button>
                 </div>
                 <div class="table-container">
                     <table id="summaryTable">
@@ -118,7 +120,9 @@
             <div id="reportSection" class="output-section hidden">
                 <div class="table-header">
                     <h3>Cost Center Report</h3>
-                    <button id="generateReportBtn" class="btn-primary btn-ghost">Export Report</button>
+                    <button id="ccBtn" style="margin-left: auto;" class="btn-ghost">CC Details</button>
+                    <button id="generateReportBtn" style="margin-left: 10px;" class="btn-primary btn-ghost">Export
+                        Report</button>
                 </div>
                 <div class="table-container">
                     <table id="reportTable">
@@ -139,6 +143,31 @@
                                 <td id="reportGrandTotal">0.00</td>
                             </tr>
                         </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rate Card Modal -->
+        <div id="rateCardModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Rate Card</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <table id="rateCardTable">
+                        <thead>
+                            <tr>
+                                <th>Crane Name</th>
+                                <th>Hourly Charges (₹)</th>
+                                <th>OT Amount/Hr (₹)</th>
+                                <th>Penalty/Hr (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rate card rows will be injected here -->
+                        </tbody>
                     </table>
                 </div>
             </div>
