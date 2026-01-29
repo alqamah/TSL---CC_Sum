@@ -49,22 +49,32 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.remove('hidden');
     });
 
-    const closeModalBtn = document.querySelector('.close-modal');
-    const modal = document.getElementById('rateCardModal');
+    ccBtn.addEventListener('click', () => {
+        renderCCDetails();
+        const modal = document.getElementById('ccDetailsModal');
+        modal.classList.remove('hidden');
+    });
 
-    closeModalBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
+    // Modal close handlers for all modals
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const modalId = btn.dataset.modal || btn.closest('.modal').id;
+            document.getElementById(modalId).classList.add('hidden');
+        });
     });
 
     window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.classList.add('hidden');
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.add('hidden');
         }
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
-            modal.classList.add('hidden');
+        if (event.key === 'Escape') {
+            document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
+                modal.classList.add('hidden');
+            });
         }
     });
 
@@ -84,9 +94,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    ccBtn.addEventListener('click', () => {
-        window.open('cc_details.pdf', '_blank');
-    });
+    function renderCCDetails() {
+        const tableBody = document.querySelector('#ccDetailsTable tbody');
+        tableBody.innerHTML = '';
+
+        // Sort by division, then by CC number
+        const sortedEntries = Object.entries(CC_DATA).sort((a, b) => {
+            if (a[1].division !== b[1].division) {
+                return a[1].division.localeCompare(b[1].division);
+            }
+            return a[0].localeCompare(b[0]);
+        });
+
+        sortedEntries.forEach(([ccNumber, ccInfo]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${ccNumber}</td>
+                <td>${ccInfo.name}</td>
+                <td>${ccInfo.division}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
 
     function showError(msg) {
         errorMessage.textContent = msg;

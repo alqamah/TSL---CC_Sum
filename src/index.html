@@ -153,7 +153,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Rate Card</h3>
-                    <span class="close-modal">&times;</span>
+                    <span class="close-modal" data-modal="rateCardModal">&times;</span>
                 </div>
                 <div class="modal-body">
                     <table id="rateCardTable">
@@ -167,6 +167,30 @@
                         </thead>
                         <tbody>
                             <!-- Rate card rows will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CC Details Modal -->
+        <div id="ccDetailsModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cost Center Details</h3>
+                    <span class="close-modal" data-modal="ccDetailsModal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <table id="ccDetailsTable">
+                        <thead>
+                            <tr>
+                                <th>CC Number</th>
+                                <th>CC Name</th>
+                                <th>Division</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- CC details rows will be injected here -->
                         </tbody>
                     </table>
                 </div>
