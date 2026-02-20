@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const records = [];
         let headerRowIndex = -1;
         let colIndices = { shiftQty: -1, otQty: -1, bdHour: -1, costCenter: -1, hmrStart: -1, hmrEnd: -1, utilization: -1 };
-
+        //mapping col indices
         for (let i = 0; i < rows.length; i++) {
             const rowStrings = rows[i].map(cell => String(cell).toUpperCase().trim());
             const shiftIdx = rowStrings.findIndex(s => s.includes("SHIFT") && s.includes("QTY"));
@@ -311,13 +311,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 "Net Total": netTotal
             };
         });
-
+        //writing data to excel
         const ws = XLSX.utils.json_to_sheet(exportData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Crane Billing Summary");
         XLSX.writeFile(wb, "crane_billing_summary.xlsx");
     });
 
+    
+    //generating report
     generateReportBtn.addEventListener('click', () => {
         if (summaryData.length === 0) {
             showError("No data available. Please generate summary first.");
