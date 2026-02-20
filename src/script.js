@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const shiftCharges = item.shiftQty * rate.hourly_charges;
             const otCharges = item.otQty * rate.ot_amount_per_hr;
             const bdCharges = item.bdHour * rate.penalty_per_hr;
-            const netTotal = shiftCharges + otCharges - bdCharges;
+            const netTotal = shiftCharges + otCharges;
 
             return {
                 "Machine": item.machine,
@@ -328,13 +328,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         summaryData.forEach(item => {
             const rate = findRate(item.machine);
-            const netTotal = (item.shiftQty * rate.hourly_charges) + (item.otQty * rate.ot_amount_per_hr) - (item.bdHour * rate.penalty_per_hr);
+            const netTotal = (item.shiftQty * rate.hourly_charges) + (item.otQty * rate.ot_amount_per_hr);
+            const utilHrs = item.utilization || 0;
 
             if (!ccAggregation[item.cc]) {
                 const ccInfo = CC_DATA[item.cc] || { name: "Unknown", division: "Unknown" };
-                ccAggregation[item.cc] = { cc: item.cc, ccName: ccInfo.name, division: ccInfo.division, totalAmount: 0 };
+                ccAggregation[item.cc] = { cc: item.cc, ccName: ccInfo.name, division: ccInfo.division, totalAmount: 0, totalUtil: 0 };
             }
             ccAggregation[item.cc].totalAmount += netTotal;
+            ccAggregation[item.cc].totalUtil += utilHrs;
         });
 
         reportData = Object.values(ccAggregation).sort((a, b) => {
@@ -349,6 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderReport(data) {
         reportTableBody.innerHTML = '';
         let grandTotal = 0;
+        let grandUtil = 0;
+        const reportTotalUtilDisplay = document.getElementById('reportTotalUtil');
 
         data.forEach(item => {
             const row = document.createElement('tr');
@@ -356,12 +360,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${item.division}</td>
                 <td>${item.cc}</td>
                 <td>${item.ccName}</td>
+                <td>${item.totalUtil.toFixed(1)} h</td>
                 <td>${formatCurrency(item.totalAmount)}</td>
             `;
             reportTableBody.appendChild(row);
             grandTotal += item.totalAmount;
+            grandUtil += item.totalUtil;
         });
 
+        reportTotalUtilDisplay.textContent = `${grandUtil.toFixed(1)} h`;
         reportGrandTotalDisplay.textContent = formatCurrency(grandTotal);
     }
 
@@ -372,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //  "Division": item.division,
             "CC Number": item.cc,
             "CC Name": item.ccName,
+            "Utilization (h)": item.totalUtil,
             "Total Amount": item.totalAmount
         }));
 
