@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
     const outputSection = document.getElementById('outputSection');
     const summaryTableBody = document.querySelector('#summaryTable tbody');
+    const totalShiftHrsDisplay = document.getElementById('totalShiftHrs');
     const totalShiftChargesDisplay = document.getElementById('totalShiftCharges');
+    const totalOtHrsDisplay = document.getElementById('totalOtHrs');
     const totalOtChargesDisplay = document.getElementById('totalOtCharges');
+    const totalBdHrsDisplay = document.getElementById('totalBdHrs');
     const totalBdChargesDisplay = document.getElementById('totalBdCharges');
     const grandTotalDisplay = document.getElementById('grandTotal');
     const errorContainer = document.getElementById('errorContainer');
@@ -165,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function extractDataRows(rows, sheetMeta) {
         const records = [];
         let headerRowIndex = -1;
-        let colIndices = { shiftQty: -1, otQty: -1, bdHour: -1, costCenter: -1 };
+        let colIndices = { shiftQty: -1, otQty: -1, bdHour: -1, costCenter: -1, hmrStart: -1, hmrEnd: -1, utilization: -1 };
 
         for (let i = 0; i < rows.length; i++) {
             const rowStrings = rows[i].map(cell => String(cell).toUpperCase().trim());
@@ -173,10 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const otIdx = rowStrings.findIndex(s => s.includes("OT") && s.includes("QTY"));
             const bdIdx = rowStrings.findIndex(s => s.includes("BREAKDOWN") && s.includes("HOUR"));
             const ccIdx = rowStrings.findIndex(s => s === "COST CENTER" || s === "CC");
+            const hmrStartIdx = rowStrings.findIndex(s => s.includes("HMR") && s.includes("START"));
+            const hmrEndIdx = rowStrings.findIndex(s => s.includes("HMR") && s.includes("END"));
+            const utilIdx = rowStrings.findIndex(s => s === "UTILIZATION" || s === "UTILISATION");
 
             if (shiftIdx !== -1 && otIdx !== -1 && ccIdx !== -1) {
                 headerRowIndex = i;
-                colIndices = { shiftQty: shiftIdx, otQty: otIdx, bdHour: bdIdx, costCenter: ccIdx };
+                colIndices = { shiftQty: shiftIdx, otQty: otIdx, bdHour: bdIdx, costCenter: ccIdx, hmrStart: hmrStartIdx, hmrEnd: hmrEndIdx, utilization: utilIdx };
                 break;
             }
         }
@@ -193,7 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 cc: cc,
                 shiftQty: parseFloat(row[colIndices.shiftQty]) || 0,
                 otQty: parseFloat(row[colIndices.otQty]) || 0,
-                bdHour: colIndices.bdHour !== -1 ? (parseFloat(row[colIndices.bdHour]) || 0) : 0
+                bdHour: colIndices.bdHour !== -1 ? (parseFloat(row[colIndices.bdHour]) || 0) : 0,
+                hmrStart: colIndices.hmrStart !== -1 ? (parseFloat(row[colIndices.hmrStart]) || null) : null,
+                hmrEnd: colIndices.hmrEnd !== -1 ? (parseFloat(row[colIndices.hmrEnd]) || null) : null,
+                utilization: colIndices.utilization !== -1 ? (parseFloat(row[colIndices.utilization]) || null) : null
             });
         }
 
@@ -228,18 +237,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const shiftCharges = item.shiftQty * rate.hourly_charges;
             const otCharges = item.otQty * rate.ot_amount_per_hr;
             const bdCharges = item.bdHour * rate.penalty_per_hr;
-            const netTotal = shiftCharges + otCharges - bdCharges;
+            const netTotal = shiftCharges + otCharges;
 
+            const fmtHmr = v => v !== null ? v.toFixed(1) : '-';
+            const fmtUtil = v => v !== null ? `${v.toFixed(1)} %` : '-';
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.machine}</td>
                 <td>${item.cc}</td>
                 <td>${ccInfo.name}</td>
                 <td>${ccInfo.division}</td>
+                <td>${item.shiftQty.toFixed(2)} h</td>
                 <td title="₹${rate.hourly_charges} x ${item.shiftQty.toFixed(2)}h">${formatCurrency(shiftCharges)}</td>
+                <td>${item.otQty.toFixed(2)} h</td>
                 <td title="₹${rate.ot_amount_per_hr} x ${item.otQty.toFixed(2)}h">${formatCurrency(otCharges)}</td>
+                <td>${item.bdHour.toFixed(2)} h</td>
                 <td title="₹${rate.penalty_per_hr} x ${item.bdHour.toFixed(2)}h">${formatCurrency(bdCharges)}</td>
-                <td title="shift_charges + ot_charges - bd_charges">${formatCurrency(netTotal)}</td>
+                <td>${fmtHmr(item.hmrStart)}</td>
+                <td>${fmtHmr(item.hmrEnd)}</td>
+                <td>${fmtUtil(item.utilization)}</td>
+                <td title="shift_charges + ot_charges">${formatCurrency(netTotal)}</td>
             `;
             summaryTableBody.appendChild(row);
 
@@ -252,8 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
             grandTotal += netTotal;
         });
 
+        totalShiftHrsDisplay.textContent = `${grandShift.toFixed(2)} h`;
         totalShiftChargesDisplay.textContent = formatCurrency(grandShiftCharges);
+        totalOtHrsDisplay.textContent = `${grandOt.toFixed(2)} h`;
         totalOtChargesDisplay.textContent = formatCurrency(grandOtCharges);
+        totalBdHrsDisplay.textContent = `${grandBd.toFixed(2)} h`;
         totalBdChargesDisplay.textContent = formatCurrency(grandBdCharges);
         grandTotalDisplay.textContent = formatCurrency(grandTotal);
 
