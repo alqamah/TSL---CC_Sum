@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportTableBody = document.querySelector('#reportTable tbody');
     const reportGrandTotalDisplay = document.getElementById('reportGrandTotal');
     const exportReportBtn = document.getElementById('exportReportBtn');
+    const totalUtilHrsDisplay = document.getElementById('totalUtilHrs');
 
     let uploadedFile = null;
     let summaryData = [];
@@ -228,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderSummary(records) {
         summaryTableBody.innerHTML = '';
-        let grandShift = 0, grandOt = 0, grandBd = 0;
+        let grandShift = 0, grandOt = 0, grandBd = 0, grandUtil = 0;
         let grandShiftCharges = 0, grandOtCharges = 0, grandBdCharges = 0, grandTotal = 0;
 
         records.forEach(item => {
@@ -240,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const netTotal = shiftCharges + otCharges;
 
             const fmtHmr = v => v !== null ? v.toFixed(1) : '-';
-            const fmtUtil = v => v !== null ? `${v.toFixed(1)} %` : '-';
+            const fmtUtil = v => v !== null ? `${v.toFixed(1)} h` : '-';
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.machine}</td>
@@ -266,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grandShiftCharges += shiftCharges;
             grandOtCharges += otCharges;
             grandBdCharges += bdCharges;
+            grandUtil += (item.utilization || 0);
             grandTotal += netTotal;
         });
 
@@ -275,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalOtChargesDisplay.textContent = formatCurrency(grandOtCharges);
         totalBdHrsDisplay.textContent = `${grandBd.toFixed(2)} h`;
         totalBdChargesDisplay.textContent = formatCurrency(grandBdCharges);
+        totalUtilHrsDisplay.textContent = `${grandUtil.toFixed(1)} h`;
         grandTotalDisplay.textContent = formatCurrency(grandTotal);
 
         summaryData = records;
@@ -366,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (reportData.length === 0) return;
 
         const exportData = reportData.map(item => ({
-            "Division": item.division,
+            //  "Division": item.division,
             "CC Number": item.cc,
             "CC Name": item.ccName,
             "Total Amount": item.totalAmount
